@@ -1,0 +1,52 @@
+- name: Gnome Desktop is present
+  apt:
+    name: ubuntu-gnome-desktop
+    force: yes  
+    install_recommends: no
+  tags: [desktop]
+
+- name: vb guest dkms is present
+  apt:
+    name: virtualbox-guest-dkms
+    force: yes
+  tags: [desktop]
+
+- name: vb guest utils is present
+  apt:
+    name: virtualbox-guest-utils
+    force: yes
+  tags: [desktop]
+
+- name: vb guest x11 is present
+  apt:
+    name: virtualbox-guest-x11
+    force: yes
+  tags: [desktop]
+
+- name: french language pack
+  apt:
+    name: language-pack-fr
+    force: yes
+  tags: [desktop]
+
+- name: Locales are configured
+  shell: |
+    export LANGUAGE='fr_FR.UTF-8'
+    export LANG='fr_FR.UTF-8'
+    export LC_ALL='fr_FR.UTF-8'
+    locale-gen fr_FR.UTF-8
+    update-locale LANG=fr_FR.UTF-8 LC_MESSAGES=POSIX
+  tags: [desktop]
+
+- name: User locale configuration
+  copy:
+    src: pam_environment.txt
+    dest: /home/ubuntu/.pam_environment
+    mode: 0644
+    owner: ubuntu
+    group: ubuntu
+  tags: [desktop]
+
+- name: Timezone is configured
+  shell: "timedatectl set-timezone Europe/Paris"
+  tags: [desktop]
