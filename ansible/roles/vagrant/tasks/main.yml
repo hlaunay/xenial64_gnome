@@ -1,0 +1,66 @@
+- name: Vagrant user exists
+  user:
+    name: vagrant
+    password: $6$OSy7uQaRfLE$U3oKX21ZAGxaFxAX81lDFsyOK49hMEeywZl.PQWI0jwAdkgD5Xm73rY2IZLeau9DjK0yvPwDN0dGcw16olTsM0
+    append: yes
+    groups: admin,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev,lxd
+    shell: /bin/bash
+    createhome: yes
+  tags: [vagrant]
+
+- name: Ubuntu can su to vagrant without password
+  copy:
+    src: su.txt
+    dest: /etc/pam.d/su
+    mode: 0644
+    owner: root
+    group: root
+  tags: [vagrant]
+
+- name: Ssh directory exists
+  file:
+    path: /home/vagrant/.ssh
+    state: directory
+    mode: 0700
+    owner: vagrant
+    group: vagrant
+  tags: [vagrant]
+
+- name: Vagrant key is authorized
+  copy:
+    src: /home/ubuntu/.ssh/authorized_keys
+    dest: /home/vagrant/.ssh/authorized_keys
+    mode: 0600
+    owner: vagrant
+    group: vagrant
+  tags: [vagrant]
+
+- name: Allow vagrant to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^vagrant'
+    line: 'vagrant ALL=(ALL) NOPASSWD: ALL'
+  tags: [vagrant]
+
+- name: Locales are configured
+  shell: |
+    export LANGUAGE='fr_FR.UTF-8'
+    export LANG='fr_FR.UTF-8'
+    export LC_ALL='fr_FR.UTF-8'
+    locale-gen fr_FR.UTF-8
+    update-locale LANG=fr_FR.UTF-8 LC_MESSAGES=POSIX
+  tags: [desktop]
+
+- name: User locale configuration
+  copy:
+    src: pam_environment.txt
+    dest: /home/vagrant/.pam_environment
+    mode: 0644
+    owner: vagrant
+    group: vagrant
+  tags: [desktop]
+
+- name: Timezone is configured
+  shell: "timedatectl set-timezone Europe/Paris"
+  tags: [desktop]

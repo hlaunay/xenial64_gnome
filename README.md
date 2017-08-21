@@ -2,17 +2,21 @@
 
 This is the source code repository for the vagrant box [xenial64_gnome](https://app.vagrantup.com/hlaunay/boxes/xenial64_gnome/)
 
-## First use
-
-Password of ubuntu user must be set. So once the box is up and running:
+If you want to create a box based on it:
 
 ```bash
-vagrant ssh
-$ sudo passwd ubuntu
-$ exit
+mkdir myvagrantbox
+cd myvagrantbox/
+vagrant init hlaunay/xenial64_gnome
 ```
 
-Then you can login the desktop
+Edit the Vagrantfile.
+
+Run your personal box:
+
+```bash
+vagrant up
+```
 
 ## How to build?
 
