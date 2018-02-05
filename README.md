@@ -12,6 +12,16 @@ vagrant init hlaunay/xenial64_gnome
 
 Edit the Vagrantfile.
 
+```bash
+Vagrant.configure("2") do |config|
+  config.vm.box = "hlaunay/xenial64_gnome"
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize [ "modifyvm", :id, "--uart1", "0x3F8", "4" ]
+    vb.customize [ "modifyvm", :id, "--uartmode1", "file", File.join(Dir.pwd, "ubuntu-xenial-16.04-cloudimg-console.log") ]
+  end
+end
+```
+
 Run your personal box:
 
 ```bash
